@@ -1,7 +1,8 @@
 import React from "react";
 
 
-export default function Register() {
+export default function Register({isauthenticated,setAuthenticated}) {
+  console.log(isauthenticated)
   const handelSubmit = (e) =>{
     e.preventDefault()
     const username = e.target.username.value

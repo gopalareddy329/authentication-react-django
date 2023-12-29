@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import UsersDataSerializer
 from django.contrib.auth import authenticate, login
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 
@@ -41,8 +42,14 @@ def createUser(request):
 
 
 @api_view(['GET'])
-def logout_user(request):
-    logout(request)
-    print("logout")
-    return Response({"message":"Successfully"})
+@csrf_exempt
+def getuserdetails(request,pk):
+    if request.method == "GET":
+        try:
+            user=get_object_or_404(User,id=pk)
+            return Response(UsersDataSerializer(user).data)
 
+        except User.DoesNotExist:
+            return JsonResponse({'detail': 'User not found'}, status=404)
+        except:
+            return JsonResponse({'detail': 'Something went to wrong..'}, status=404)

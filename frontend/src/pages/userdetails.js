@@ -1,12 +1,13 @@
 import React from 'react'
+import { useAuth } from '../components/auth'
 
 
 const UserDetails = () => {
+  const {logout_user,userdetails} = useAuth();
 
   const handleLogout = async () =>{
-    const res = fetch("http://127.0.0.1:8000/api/logout/")
-    
-    console.log(res)
+    logout_user();
+
 
   }
     return (
@@ -15,8 +16,8 @@ const UserDetails = () => {
           <h1 className="text-2xl font-bold ">User Profile</h1>
           <div>
             <button onClick={handleLogout}>logout</button>
-            <p>Name: John Doe</p>
-            <p>Email: john.doe@example.com</p>
+            <p>Name: {userdetails.username}</p>
+            <p>Email: {userdetails.email}</p>
             {/* Add more user information as needed */}
           </div>
         </div>

@@ -1,8 +1,10 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-
+import { useAuth } from "../components/auth";
 const Login = () => {
   const navigate = useNavigate();
+
+  const { login_user,setUserDetails } = useAuth();
 
 
   const handelSubmit = (e) =>{
@@ -18,13 +20,15 @@ const Login = () => {
         })
       })
       if(res.ok){
-        const resdata=res.json()
-        navigate("/userdetails")
-       
-        
-
-         
-        
+        const resdata=await res.json();
+        login_user();
+        setUserDetails({
+           "username":resdata.username,
+           "email":resdata.email
+         })
+         console.log(resdata)
+         localStorage.setItem('userId', resdata.id);
+        navigate("/")
       }
       else{
         alert("failed to loggin")
