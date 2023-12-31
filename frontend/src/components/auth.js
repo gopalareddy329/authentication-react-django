@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
     return localStorage.getItem('authenticated') === 'true';
   });
   const [userdetails,setUserDetails] =useState({
+    
     "username":"",
     "email":""
   })

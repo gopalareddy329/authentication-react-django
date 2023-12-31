@@ -1,11 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../components/auth'
 
 
 const UserDetails = () => {
   const {logout_user,userdetails} = useAuth();
-  const [edit,setEdit]=useState(true)
+  const [edit,setEdit]=useState(false)
+  const [data,setData]=useState(null)
+  
+  const handelChange = (e) =>{
+    console.log()
+    setData({...data,[e.target.name]:e.target.value})
+  }
+  const handelCancel = () =>{
+    setData(userdetails)
+    setEdit(!edit)
 
+  }
+  
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch user details
+        const userDetailsData = await userdetails;
+        setData(userDetailsData);
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      }
+    };
+    fetchData();
+  }, [userdetails]);
   const handleLogout = async () =>{
     logout_user();
   }
@@ -16,11 +40,17 @@ const UserDetails = () => {
           <h1 className="text-2xl font-bold ">User Profile</h1>
           <div>
             <button onClick={handleLogout} className='float-right bg-red-500 p-2 text-white'>logout</button>
-            <p>Name:{edit ? <input value={userdetails.username} className='bg-transparent text-gray-600' type='text'/>:userdetails.username} </p>
-            <p>Email:{edit ? <input value={userdetails.email} className='bg-transparent text-gray-600' type='text'/>:userdetails.email} </p>
-            {edit && <button className='m-2 bg-[#66bf26] p-2 text-white'>Submit</button>}
-            <button className='m-2 bg-[#66bf26] p-2 text-white' onClick={()=>setEdit(!edit)}>{edit ? "X":"Edit"}</button>
-            
+            {data ? 
+            (
+              <div>
+                  <p >Name:{edit ? <input value={ data.username} name="username" onChange={handelChange} className='bg-transparent border-black border-[1px] border-solid ml-1 text-gray-600' type='text'/>: data.username} </p>
+                  <p>Email:{edit ? <input value={data.email} name="email" onChange={handelChange} className='bg-transparent text-gray-600 border-black border-[1px] border-solid ml-1' type='text'/>:data.email} </p>
+                  {edit && <button className='m-2 bg-[#66bf26] p-2 text-white'>Submit</button>}
+                  <button className='m-2 bg-[#66bf26] p-2 text-white' onClick={handelCancel}>{edit ? "X":"Edit"}</button>
+              </div>
+            )
+              :(<div>Loading</div>)}
+
           </div>
         </div>
       </div>

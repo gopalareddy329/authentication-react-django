@@ -13,7 +13,8 @@ const App = () => {
       var resdata= await res.json()
       setUserDetails({
         "username":resdata.username,
-        "email":resdata.email
+        "email":resdata.email,
+        
       })
 
     }
