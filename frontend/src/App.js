@@ -7,7 +7,7 @@ import { AuthProvider, useAuth } from './components/auth';
 
 const App = () => {
   const getUserData = async (setUserDetails) =>{
-    console.log()
+  
     if(localStorage.getItem('userId')){
       var res=await fetch("http://127.0.0.1:8000/api/getuserdetails/"+localStorage.getItem('userId')+"/")
       var resdata= await res.json()
@@ -25,10 +25,7 @@ const App = () => {
     const { authenticated,userdetails,setUserDetails } = useAuth();
     if(authenticated === true){
       if(userdetails.username === ""){
-        var resdata=getUserData(setUserDetails)
-        console.log(resdata)
-        
-        
+        getUserData(setUserDetails)
       }
       
     }

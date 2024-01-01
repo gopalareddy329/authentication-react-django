@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout_user = () => {
+    localStorage.removeItem('userId');
     setAuthenticated(false);
   };
 

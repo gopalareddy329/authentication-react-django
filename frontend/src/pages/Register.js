@@ -1,8 +1,10 @@
-import React from "react";
-
-
-export default function Register({isauthenticated,setAuthenticated}) {
-  console.log(isauthenticated)
+import React, { useState } from "react";
+import { useAuth } from "../components/auth";
+import { useNavigate } from 'react-router-dom';
+export default function Register() {
+  const { login_user,setUserDetails } = useAuth();
+  const navigate = useNavigate();
+  const [error,setError]=useState(null)
   const handelSubmit = (e) =>{
     e.preventDefault()
     const username = e.target.username.value
@@ -15,24 +17,32 @@ export default function Register({isauthenticated,setAuthenticated}) {
           'Content-Type': 'application/json',
         },
         body:JSON.stringify({
-          username,
-          password,
-          email
+          'username':username,
+          'password':password,
+          'email':email
         })
       })
+      const resdata=await res.json();
       if(res.ok){
         
-        alert("logged in ")
-        const responseObject = await res.json();
-        console.log(responseObject)
+        
+        login_user();
+        setUserDetails({
+           "username":resdata.username,
+           "email":resdata.email
+         })
+         
+         localStorage.setItem('userId', resdata.id);
+        navigate("/")
       }
       else{
-        alert("failed to loggin")
+        setError(resdata)
       }
 
     }
     createUser()
     e.target.password.value = ""
+  
   }
   return (
     <section className="min-h-screen min-w-full m-0 p-0 bg-neutral-700">
@@ -103,6 +113,9 @@ export default function Register({isauthenticated,setAuthenticated}) {
 
                        
                     
+                      </div>
+                      <div>
+                        {error?.username}
                       </div>
 
                      
